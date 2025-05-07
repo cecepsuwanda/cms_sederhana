@@ -4,100 +4,137 @@ A simple Content Management System built with PHP and AdminLTE.
 
 ## Features
 
-- User Authentication and Authorization
-- Role-based Access Control (Admin, Editor, Author)
-- Page Management with Rich Text Editor
-- User Management
-- Responsive Admin Interface
-- Category Management
+- User Authentication
+  - Login/Logout functionality
+  - User roles (admin, editor, author)
+  - User management
+
+- Content Management
+  - Create, edit, and delete pages
+  - Rich text editor (Summernote)
+  - Page status (published/draft)
+  - SEO-friendly URLs (slugs)
+
+- Admin Dashboard
+  - Overview statistics
+  - Recent pages list
+  - Quick actions for page management
+
+- Public Pages
+  - List of published pages
+  - Individual page view
+  - Responsive design
 
 ## Requirements
 
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
-- Web Server (Apache/Nginx)
-- Composer (for dependencies)
+- Apache/Nginx web server
 
 ## Installation
 
-1. Clone or download this repository to your web server directory
-2. Create a MySQL database named `cms_sederhana`
-3. Import the `database.sql` file to set up the database structure
-4. Configure your database connection in `config/database.php`:
-   ```php
-   define('DB_HOST', 'localhost');
-   define('DB_USER', 'your_username');
-   define('DB_PASS', 'your_password');
-   define('DB_NAME', 'cms_sederhana');
-   ```
-5. Install dependencies using Composer:
-   ```bash
-   # Install Composer if you haven't already
-   curl -sS https://getcomposer.org/installer | php
-   mv composer.phar /usr/local/bin/composer
-
-   # Install project dependencies
-   composer install
-   ```
-   This will automatically:
-   - Download AdminLTE and all required assets
-   - Set up the necessary directory structure
-   - Copy all required files to their correct locations
-
-## Directory Structure
-
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/cms_sederhana.git
+cd cms_sederhana
 ```
-cms_sederhana/
-├── config/
-│   └── database.php
-├── public/
-│   ├── plugins/
-│   │   ├── fontawesome-free/
-│   │   ├── jquery/
-│   │   ├── bootstrap/
-│   │   └── summernote/
-│   └── dist/
-│       ├── css/
-│       └── js/
-├── vendor/
-├── index.php
-├── login.php
-├── logout.php
-├── pages.php
-├── users.php
-├── composer.json
-├── database.sql
-└── reset_admin_password.php
+
+2. Create a MySQL database and import the schema:
+```bash
+mysql -u your_username -p your_database < database.sql
 ```
+
+3. Configure the database connection:
+   - Copy `config/config.example.php` to `config/config.php`
+   - Update the database credentials in `config/config.php`
+
+4. Set up the web server:
+   - Point the document root to the project directory
+   - Make sure mod_rewrite is enabled (for Apache)
+
+5. Set proper permissions:
+```bash
+chmod 755 -R .
+```
+
+## External Resources (CDN)
+
+The project uses the following CDN resources:
+
+- AdminLTE 3.2.0 (jsDelivr)
+- Font Awesome 5.15.4 (cdnjs)
+- jQuery 3.6.0 (jQuery CDN)
+- Bootstrap 4.6.0 (jsDelivr)
+- DataTables 1.10.25 (cdnjs)
 
 ## Default Login
 
 - Username: admin
 - Password: admin123
 
-## Resetting the Admin Password
+## File Structure
 
-If you forget the admin password or need to reset it, you can use the provided script:
-
-1. Open `reset_admin_password.php` in your browser (e.g., `http://localhost/cms_sederhana/reset_admin_password.php`).
-2. The script will reset the admin password to `admin123`.
-3. **Important:** Delete the `reset_admin_password.php` file after use for security reasons.
+```
+cms_sederhana/
+├── config/
+│   ├── config.php         # Configuration file
+│   └── database.php       # Database connection
+├── add_page.php          # Add new page
+├── dashboard.php         # Admin dashboard
+├── database.sql          # Database schema
+├── delete_page.php       # Delete page
+├── edit_page.php         # Edit page
+├── index.php             # Public homepage
+├── login.php             # Login page
+├── logout.php            # Logout handler
+├── pages.php             # Pages management
+├── post.php              # Public page view
+├── users.php             # User management
+└── README.md             # This file
+```
 
 ## Usage
 
-1. Log in with the default admin credentials
-2. Create and manage users with different roles
-3. Create and edit pages with the rich text editor
-4. Organize content with categories
-5. Monitor system statistics on the dashboard
+### Admin Area
+
+1. Login with admin credentials
+2. Access the dashboard to see:
+   - Total pages count
+   - Published pages count
+   - Total users count
+   - Recent pages list
+3. Manage pages:
+   - Create new pages
+   - Edit existing pages
+   - Delete pages
+   - Preview published pages
+4. Manage users:
+   - Create new users
+   - Edit user details
+   - Delete users
+   - Assign roles
+
+### Public Area
+
+1. View published pages on the homepage
+2. Click on page titles to read full content
+3. Navigate through the site using the responsive menu
 
 ## Security
 
-- All passwords are hashed using PHP's password_hash()
+- Passwords are hashed using PHP's password_hash()
 - SQL injection prevention using mysqli_real_escape_string()
 - XSS prevention using htmlspecialchars()
 - Session-based authentication
 - Role-based access control
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
 ## License
 

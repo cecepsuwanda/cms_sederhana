@@ -1,21 +1,29 @@
 <?php
 require_once 'config/database.php';
 
-// Get all published posts
+// Get the post slug from URL
+$slug = isset($_GET['slug']) ? mysqli_real_escape_string($conn, $_GET['slug']) : '';
+
+// Get the post details
 $query = "SELECT p.*, u.username as author_name 
           FROM pages p 
           LEFT JOIN users u ON p.author_id = u.id 
-          WHERE p.status = 'published' 
-          ORDER BY p.created_at DESC";
+          WHERE p.slug = '$slug' AND p.status = 'published'";
 $result = mysqli_query($conn, $query);
+$post = mysqli_fetch_assoc($result);
+
+// If post not found, redirect to home
+if (!$post) {
+    header("Location: index.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CMS Sederhana</title>
-
+    <title><?php echo htmlspecialchars($post['title']); ?> - CMS Sederhana</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -31,12 +39,7 @@ $result = mysqli_query($conn, $query);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Latest Posts</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="login.php" class="btn btn-primary float-right">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
+                            <h1 class="m-0"><?php echo htmlspecialchars($post['title']); ?></h1>
                         </div>
                     </div>
                 </div>
@@ -45,32 +48,21 @@ $result = mysqli_query($conn, $query);
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <?php while ($post = mysqli_fetch_assoc($result)): ?>
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>">
-                                            <?php echo htmlspecialchars($post['title']); ?>
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
+                                    <div class="post-meta mb-3">
                                         <small class="text-muted">
                                             By <?php echo htmlspecialchars($post['author_name']); ?> | 
                                             Published on <?php echo date('F j, Y', strtotime($post['created_at'])); ?>
                                         </small>
-                                    </p>
-                                    <p class="card-text">
-                                        <?php 
-                                        // Show excerpt of content
-                                        echo substr(strip_tags($post['content']), 0, 200) . '...'; 
-                                        ?>
-                                    </p>
-                                    <a href="post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>" class="btn btn-primary">Read More</a>
+                                    </div>
+                                    <div class="post-content">
+                                        <?php echo $post['content']; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <?php endwhile; ?>
                     </div>
                 </div>
             </div>
