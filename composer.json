@@ -1,0 +1,31 @@
+{
+    "name": "cms-sederhana/cms",
+    "description": "A simple Content Management System built with PHP and AdminLTE",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "almasaeed2010/adminlte": "^3.2",
+        "components/jquery": "^3.6",
+        "twbs/bootstrap": "^4.6",
+        "fortawesome/font-awesome": "^4.7",
+        "summernote/summernote": "^0.8.20"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "mkdir -p public/plugins",
+            "cp -r vendor/almasaeed2010/adminlte/dist/* public/dist/",
+            "cp -r vendor/components/jquery/jquery.min.js public/plugins/jquery/",
+            "cp -r vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js public/plugins/bootstrap/js/",
+            "cp -r vendor/twbs/bootstrap/dist/css/bootstrap.min.css public/plugins/bootstrap/css/",
+            "cp -r vendor/fortawesome/font-awesome/css/* public/plugins/fontawesome-free/css/",
+            "cp -r vendor/fortawesome/font-awesome/fonts/* public/plugins/fontawesome-free/fonts/",
+            "cp -r vendor/summernote/summernote/dist/* public/plugins/summernote/"
+        ]
+    }
+} 

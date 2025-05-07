@@ -30,14 +30,19 @@ A simple Content Management System built with PHP and AdminLTE.
    define('DB_PASS', 'your_password');
    define('DB_NAME', 'cms_sederhana');
    ```
-5. Make sure you have AdminLTE assets in the correct directories:
-   - `plugins/` - for jQuery, Bootstrap, Font Awesome, and Summernote
-   - `dist/` - for AdminLTE core files
+5. Install dependencies using Composer:
+   ```bash
+   # Install Composer if you haven't already
+   curl -sS https://getcomposer.org/installer | php
+   mv composer.phar /usr/local/bin/composer
 
-## Default Login
-
-- Username: admin
-- Password: admin123
+   # Install project dependencies
+   composer install
+   ```
+   This will automatically:
+   - Download AdminLTE and all required assets
+   - Set up the necessary directory structure
+   - Copy all required files to their correct locations
 
 ## Directory Structure
 
@@ -45,21 +50,29 @@ A simple Content Management System built with PHP and AdminLTE.
 cms_sederhana/
 ├── config/
 │   └── database.php
-├── plugins/
-│   ├── fontawesome-free/
-│   ├── jquery/
-│   ├── bootstrap/
-│   └── summernote/
-├── dist/
-│   ├── css/
-│   └── js/
+├── public/
+│   ├── plugins/
+│   │   ├── fontawesome-free/
+│   │   ├── jquery/
+│   │   ├── bootstrap/
+│   │   └── summernote/
+│   └── dist/
+│       ├── css/
+│       └── js/
+├── vendor/
 ├── index.php
 ├── login.php
 ├── logout.php
 ├── pages.php
 ├── users.php
+├── composer.json
 └── database.sql
 ```
+
+## Default Login
+
+- Username: admin
+- Password: admin123
 
 ## Usage
 
