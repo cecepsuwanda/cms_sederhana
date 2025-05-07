@@ -66,13 +66,22 @@ cms_sederhana/
 ├── pages.php
 ├── users.php
 ├── composer.json
-└── database.sql
+├── database.sql
+└── reset_admin_password.php
 ```
 
 ## Default Login
 
 - Username: admin
 - Password: admin123
+
+## Resetting the Admin Password
+
+If you forget the admin password or need to reset it, you can use the provided script:
+
+1. Open `reset_admin_password.php` in your browser (e.g., `http://localhost/cms_sederhana/reset_admin_password.php`).
+2. The script will reset the admin password to `admin123`.
+3. **Important:** Delete the `reset_admin_password.php` file after use for security reasons.
 
 ## Usage
 
