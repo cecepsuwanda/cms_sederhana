@@ -3,23 +3,20 @@ session_start();
 require_once 'config/database.php';
 
 // Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+if (!is_logged_in()) {
+    redirect('login.php');
 }
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = mysqli_real_escape_string($conn, $_POST['title']);
-    $slug = strtolower(str_replace(' ', '-', $title));
-    $content = mysqli_real_escape_string($conn, $_POST['content']);
-    $status = mysqli_real_escape_string($conn, $_POST['status']);
-    $author_id = $_SESSION['user_id'];
+    $title = $_POST['title'];
+    $content = $_POST['content'];
+    $status = $_POST['status'];
     
     // Create new page
-    mysqli_query($conn, "INSERT INTO pages (title, slug, content, status, author_id) VALUES ('$title', '$slug', '$content', '$status', $author_id)");
-    header("Location: pages.php");
-    exit();
+    if (create_page($conn, $title, $content, $status)) {
+        redirect('pages.php');
+    }
 }
 ?>
 <!DOCTYPE html>

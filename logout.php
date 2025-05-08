@@ -1,6 +1,7 @@
 <?php
 session_start();
-session_destroy();
+require_once 'config/database.php';
+logout_user();
 header("Location: login.php");
 exit();
 ?> 

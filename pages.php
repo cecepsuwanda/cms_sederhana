@@ -3,17 +3,12 @@ session_start();
 require_once 'config/database.php';
 
 // Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+if (!is_logged_in()) {
+    redirect('login.php');
 }
 
 // Get all pages
-$query = "SELECT p.*, u.username as author_name 
-          FROM pages p 
-          LEFT JOIN users u ON p.author_id = u.id 
-          ORDER BY p.created_at DESC";
-$result = mysqli_query($conn, $query);
+$pages = get_all_pages($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -121,10 +116,10 @@ $result = mysqli_query($conn, $query);
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php while ($page = mysqli_fetch_assoc($result)): ?>
+                                            <?php foreach ($pages as $page): ?>
                                             <tr>
-                                                <td><?php echo htmlspecialchars($page['title']); ?></td>
-                                                <td><?php echo htmlspecialchars($page['author_name']); ?></td>
+                                                <td><?php echo sanitize_output($page['title']); ?></td>
+                                                <td><?php echo sanitize_output($page['author_name']); ?></td>
                                                 <td>
                                                     <span class="badge badge-<?php echo $page['status'] == 'published' ? 'success' : 'warning'; ?>">
                                                         <?php echo ucfirst($page['status']); ?>
@@ -145,7 +140,7 @@ $result = mysqli_query($conn, $query);
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
-                                            <?php endwhile; ?>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>

@@ -2,20 +2,19 @@
 require_once 'config/database.php';
 
 // Get the post slug from URL
-$slug = isset($_GET['slug']) ? mysqli_real_escape_string($conn, $_GET['slug']) : '';
+$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 
 // Get the post details
 $query = "SELECT p.*, u.username as author_name 
           FROM pages p 
           LEFT JOIN users u ON p.author_id = u.id 
-          WHERE p.slug = '$slug' AND p.status = 'published'";
+          WHERE p.slug = '" . mysqli_real_escape_string($conn, $slug) . "' AND p.status = 'published'";
 $result = mysqli_query($conn, $query);
 $post = mysqli_fetch_assoc($result);
 
 // If post not found, redirect to home
 if (!$post) {
-    header("Location: index.php");
-    exit();
+    redirect('index.php');
 }
 ?>
 <!DOCTYPE html>
@@ -23,7 +22,7 @@ if (!$post) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo htmlspecialchars($post['title']); ?> - CMS Sederhana</title>
+    <title><?php echo sanitize_output($post['title']); ?> - CMS Sederhana</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -39,7 +38,7 @@ if (!$post) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0"><?php echo htmlspecialchars($post['title']); ?></h1>
+                            <h1 class="m-0"><?php echo sanitize_output($post['title']); ?></h1>
                         </div>
                     </div>
                 </div>
@@ -53,7 +52,7 @@ if (!$post) {
                                 <div class="card-body">
                                     <div class="post-meta mb-3">
                                         <small class="text-muted">
-                                            By <?php echo htmlspecialchars($post['author_name']); ?> | 
+                                            By <?php echo sanitize_output($post['author_name']); ?> | 
                                             Published on <?php echo date('F j, Y', strtotime($post['created_at'])); ?>
                                         </small>
                                     </div>

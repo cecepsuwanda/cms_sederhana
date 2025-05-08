@@ -1,7 +1,8 @@
 <?php
 require_once 'config.php';
+require_once 'includes/functions.php';
 
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = db_connect();
 
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());

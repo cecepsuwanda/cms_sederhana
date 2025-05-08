@@ -3,9 +3,8 @@ session_start();
 require_once 'config/database.php';
 
 // Check if user is already logged in
-if (isset($_SESSION['user_id'])) {
-    header("Location: pages.php");
-    exit();
+if (is_logged_in()) {
+    redirect('pages.php');
 }
 
 $error = '';
@@ -15,20 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
-            header("Location: pages.php");
-            exit();
-        }
+    if (login_user($conn, $username, $password)) {
+        redirect('pages.php');
     }
     $error = 'Invalid username or password';
 }
@@ -58,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="login-box-msg">Sign in to start your session</p>
 
             <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
+                <div class="alert alert-danger"><?php echo sanitize_output($error); ?></div>
             <?php endif; ?>
 
             <form method="POST">

@@ -8,6 +8,10 @@ $query = "SELECT p.*, u.username as author_name
           WHERE p.status = 'published' 
           ORDER BY p.created_at DESC";
 $result = mysqli_query($conn, $query);
+$posts = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $posts[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,18 +49,18 @@ $result = mysqli_query($conn, $query);
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <?php while ($post = mysqli_fetch_assoc($result)): ?>
+                        <?php foreach ($posts as $post): ?>
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>">
-                                            <?php echo htmlspecialchars($post['title']); ?>
+                                        <a href="post.php?slug=<?php echo sanitize_output($post['slug']); ?>">
+                                            <?php echo sanitize_output($post['title']); ?>
                                         </a>
                                     </h5>
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            By <?php echo htmlspecialchars($post['author_name']); ?> | 
+                                            By <?php echo sanitize_output($post['author_name']); ?> | 
                                             Published on <?php echo date('F j, Y', strtotime($post['created_at'])); ?>
                                         </small>
                                     </p>
@@ -66,11 +70,11 @@ $result = mysqli_query($conn, $query);
                                         echo substr(strip_tags($post['content']), 0, 200) . '...'; 
                                         ?>
                                     </p>
-                                    <a href="post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>" class="btn btn-primary">Read More</a>
+                                    <a href="post.php?slug=<?php echo sanitize_output($post['slug']); ?>" class="btn btn-primary">Read More</a>
                                 </div>
                             </div>
                         </div>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>

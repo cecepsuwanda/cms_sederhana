@@ -3,36 +3,31 @@ session_start();
 require_once 'config/database.php';
 
 // Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+if (!is_logged_in()) {
+    redirect('login.php');
 }
 
 // Get page ID from URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Get page details
-$query = "SELECT * FROM pages WHERE id = $id";
-$result = mysqli_query($conn, $query);
-$page = mysqli_fetch_assoc($result);
+$page = get_page($conn, $id);
 
 // If page not found, redirect to pages list
 if (!$page) {
-    header("Location: pages.php");
-    exit();
+    redirect('pages.php');
 }
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = mysqli_real_escape_string($conn, $_POST['title']);
-    $slug = strtolower(str_replace(' ', '-', $title));
-    $content = mysqli_real_escape_string($conn, $_POST['content']);
-    $status = mysqli_real_escape_string($conn, $_POST['status']);
+    $title = $_POST['title'];
+    $content = $_POST['content'];
+    $status = $_POST['status'];
     
     // Update page
-    mysqli_query($conn, "UPDATE pages SET title = '$title', slug = '$slug', content = '$content', status = '$status' WHERE id = $id");
-    header("Location: pages.php");
-    exit();
+    if (update_page($conn, $id, $title, $content, $status)) {
+        redirect('pages.php');
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -127,11 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <form method="POST">
                                         <div class="form-group">
                                             <label>Title</label>
-                                            <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($page['title']); ?>" required>
+                                            <input type="text" class="form-control" name="title" value="<?php echo sanitize_output($page['title']); ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Content</label>
-                                            <textarea class="form-control" name="content" id="content" required><?php echo htmlspecialchars($page['content']); ?></textarea>
+                                            <textarea class="form-control" name="content" id="content" required><?php echo sanitize_output($page['content']); ?></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label>Status</label>
